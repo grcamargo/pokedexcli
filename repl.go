@@ -10,16 +10,43 @@ import (
 func startRepl() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		fmt.Printf("repl >")
+		fmt.Printf("repl> ")
 		scanner.Scan()
 		text := scanner.Text()
 		cleanedText := cleanInput(text)
 		if len(cleanedText) == 0 { //simulate shell behavior
 			continue
 		}
-		command := cleanedText[0]
+		commandName := cleanedText[0]
+		availableCommands := getCommands()
+		command, ok := availableCommands[commandName]
+		if !ok {
+			fmt.Println("invalid command")
+			continue
+		}
+		command.callback()
 
-		fmt.Println("echoing:", command)
+	}
+}
+
+type cliCommand struct {
+	name        string
+	description string
+	callback    func()
+}
+
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
+		"help": {
+			name:        "help",
+			description: "Prints de help menu",
+			callback:    callbackHelp,
+		},
+		"exit": {
+			name:        "exit",
+			description: "Turns off the repl",
+			callback:    callbackExit,
+		},
 	}
 }
 
