@@ -32,7 +32,7 @@ func startRepl() {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func()
+	callback    func() error
 }
 
 func getCommands() map[string]cliCommand {
@@ -46,6 +46,11 @@ func getCommands() map[string]cliCommand {
 			name:        "exit",
 			description: "Turns off the repl",
 			callback:    callbackExit,
+		},
+		"area": {
+			name:        "area",
+			description: "Get de locations areas",
+			callback:    callBackLocationArea,
 		},
 	}
 }
